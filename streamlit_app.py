@@ -2,7 +2,6 @@ import streamlit as st
 from openai import OpenAI
 import time
 import sqlite3
-import bcrypt
 import os 
 
 # Load environment variables
@@ -23,11 +22,11 @@ def init_db():
     conn.close()
 
 def create_user(username, password):
-    hashed = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
+    
     thread = client.beta.threads.create()
     conn = sqlite3.connect('users.db')
     c = conn.cursor()
-    c.execute("INSERT INTO users VALUES (?, ?, ?)", (username, hashed, thread.id))
+    c.execute("INSERT INTO users VALUES (?, ?, ?)", (username, password, thread.id))
     conn.commit()
     conn.close()
     return thread.id
@@ -38,8 +37,6 @@ def verify_user(username, password):
     c.execute("SELECT password, thread_id FROM users WHERE username=?", (username,))
     result = c.fetchone()
     conn.close()
-    if result and bcrypt.checkpw(password.encode('utf-8'), result[0]):
-        return result[1]  # Return thread_id
     return None
 
 def get_chat_history(thread_id):
