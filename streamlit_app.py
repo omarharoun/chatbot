@@ -5,8 +5,6 @@ import sqlite3
 import bcrypt
 import os 
 
-# Show title and description.
-st.title("💬 Chatbot")
 # Load environment variables
 os.environ["OPENAI_API_KEY"] = st.secrets["OPENAI_API_KEY"]
 os.environ["assistant_id"] = st.secrets["assistant_id"]
@@ -146,4 +144,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
